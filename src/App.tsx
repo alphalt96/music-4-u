@@ -1,10 +1,19 @@
 import React from 'react';
-import './App.css';
+import { Route, Routes } from 'react-router';
+
+import { Sidebar } from './components'
+import Player from './containers/Player'
 
 function App() {
   return (
-    <div className="App">
-      React app
+    <div className="flex h-screen">
+      <Sidebar />
+      <div className="w-full">
+        <Routes>
+          <Route path="/*" element={ <Player /> } />
+          <Route path="/player" element={ <Player/> } />
+        </Routes>
+      </div>
     </div>
   );
 }
