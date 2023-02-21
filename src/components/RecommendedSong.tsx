@@ -23,7 +23,7 @@ const RecommendedSong = () => {
       </div>
       <div className="flex flex-col mt-5 gap-y-9px">
         {data.map(item => (
-          <div className="flex">
+          <div key={item.id} className="flex">
             <Link to="/">
               <img 
                 className="w-42px h-42px bg-black rounded-lg"

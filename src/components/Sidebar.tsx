@@ -9,7 +9,7 @@ import { SidebarPropType } from '../utils/types';
 import photo from '../assets/default.png'
 
 const inactivatedMenu = 'p-2.5 rounded-lg'
-const activatedMenu = 'bg-green-500 text-white p-2.5 rounded-2xl'
+const activatedMenu = 'bg-green2 text-white p-2.5 rounded-2xl'
 
 const Sidebar = ({ user }: SidebarPropType) => {
   return (
