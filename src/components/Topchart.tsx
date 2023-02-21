@@ -30,28 +30,28 @@ const Topchart = () => {
   ]
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-y-19px">
       <div className="flex relative items-center">
-        <span className="text-xl">Top-chart</span>
+        <span className="text-xl text-gray3 font-poppins font-semibold">Top-chart</span>
         <div className="flex absolute right-2 items-center text-gray1">
-          <span>Week</span>
+          <span className="text-gray1 font-poppins">Week</span>
           <RiArrowDownSLine />
         </div>
       </div>
-      <div className="grid grid-cols-2 mt-5 justify-items-center gap-y-5">
+      <div className="grid grid-cols-2 justify-items-center gap-y-5">
         {data.map(item => (
           <div key={item.id}>
             <Link to="/">
               <img
                 src={item.img}
-                className="w-32 h-32 rounded-lg"
+                className="w-120px h-120px rounded-lg bg-black"
                 alt="song-photo" />
             </Link>
-            <div className="">
+            <div className="px-1 py-1.5">
               <Link to="/">
-                <p className="font-medium">{item.title}</p>
+                <p className="font-medium text-gray3 text-sm font-poppins">{item.title}</p>
               </Link>
-              <p className="font-light text-gray2">{item.artist}, {item.releasedDate.getFullYear()}</p>
+              <p className="font-light text-gray2 text-xs font-poppins">{item.artist}, {item.releasedDate.getFullYear()}</p>
             </div>
           </div>
         ))}
