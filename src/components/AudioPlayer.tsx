@@ -6,7 +6,7 @@ import { BsFillSkipForwardFill, BsFillSkipBackwardFill } from 'react-icons/bs'
 import { IoVolumeLow, IoVolumeMedium, IoVolumeHigh, IoVolumeMute } from 'react-icons/io5'
 
 import client from '../utils/client'
-import { getTimeRange } from '../utils/timer'
+import { convertSecondToMin, getTimeRange } from '../utils/timer'
 
 const AudioPlayer = () => {
   const audioRef = useRef<HTMLAudioElement>(null)
@@ -14,8 +14,8 @@ const AudioPlayer = () => {
   const [isMuted, setIsMuted] = useState(false)
   const [isLooped, setIsLooped] = useState(false)
   const [duration, setDuration] = useState(0)
-  const [timeLoaded, setTimeLoaded] = useState('00:00')
-  const [timeLeft, setTimeLeft] = useState('00:00')
+  const [timeLoaded, setTimeLoaded] = useState('0:00')
+  const [timeLeft, setTimeLeft] = useState('0:00')
   const [volume, setVolume] = useState(1)
   const [currentTime, setCurrentTime] = useState(0)
 
@@ -61,6 +61,7 @@ const AudioPlayer = () => {
   const onLoadedData = () => {
     if (audioRef.current) {
       setDuration(audioRef.current.duration)
+      setTimeLeft(convertSecondToMin(audioRef.current.duration))
       // setIsPlaying(true)
       // audioRef.current.muted = true
       // audioRef.current.play()
