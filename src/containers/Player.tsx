@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { AiOutlinePlus, AiOutlineHeart } from 'react-icons/ai'
 
 import { Discover, Tracklist, AudioPlayer } from '../components'

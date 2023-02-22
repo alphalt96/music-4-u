@@ -1,20 +1,48 @@
-import React, { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import ReactSlider from 'react-input-slider'
 import { FaRandom, FaPlay, FaPause } from 'react-icons/fa'
 import { FiRepeat } from 'react-icons/fi'
 import { BsFillSkipForwardFill, BsFillSkipBackwardFill } from 'react-icons/bs'
 import { IoVolumeLow, IoVolumeMedium, IoVolumeHigh, IoVolumeMute } from 'react-icons/io5'
 
-import song from '../assets/default.mp3'
+import client from '../utils/client'
+import { getTimeRange } from '../utils/timer'
 
 const AudioPlayer = () => {
   const audioRef = useRef<HTMLAudioElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
+  const [isLooped, setIsLooped] = useState(false)
   const [duration, setDuration] = useState(0)
+  const [timeLoaded, setTimeLoaded] = useState('00:00')
+  const [timeLeft, setTimeLeft] = useState('00:00')
+  const [volume, setVolume] = useState(1)
   const [currentTime, setCurrentTime] = useState(0)
 
-  const onSliderChange = (changed: { x: number }) => {
+  useEffect(() => {
+    client.getSongDownloadUrl('1')
+      .then(url => {
+        client.getSongMediaFile(url).then(async data => {
+          if (data && audioRef.current) {
+            const blobParts: BlobPart[] = []
+            let readableData = await data.read()
+
+            // read until the last blob
+            while (!readableData.done) {
+              blobParts.push(readableData.value)
+              readableData = await data.read()
+            }
+            // TODO: use dynamic media type
+            const blob = new Blob(blobParts, { type: 'audio/mp3' })
+            const blobUrl = URL.createObjectURL(blob)
+            audioRef.current.src = blobUrl
+          }
+        })
+      })
+  }, [])
+
+
+  const onSongProgressChange = (changed: { x: number }) => {
     if (audioRef.current) {
       audioRef.current.currentTime = changed.x
       setCurrentTime(changed.x)
@@ -22,7 +50,12 @@ const AudioPlayer = () => {
   }
 
   const onTimeUpdate = (event: any) => {
-    setCurrentTime(audioRef.current?.currentTime || 0)
+    if (audioRef.current) {
+      setCurrentTime(audioRef.current.currentTime)
+      const timeRange = getTimeRange(duration, audioRef.current.currentTime)
+      setTimeLoaded(timeRange.timeLoaded)
+      setTimeLeft(timeRange.timeLeft)
+    }
   }
 
   const onLoadedData = () => {
@@ -31,6 +64,13 @@ const AudioPlayer = () => {
       // setIsPlaying(true)
       // audioRef.current.muted = true
       // audioRef.current.play()
+    }
+  }
+
+  const toggleLoopedStatus = () => {
+    if (audioRef.current) {
+      audioRef.current.loop = !isLooped
+      setIsLooped(!isLooped)
     }
   }
 
@@ -52,12 +92,19 @@ const AudioPlayer = () => {
     }
   }
 
+  const onVolumeChange = (changed: { x: number }) => {
+    if (audioRef.current) {
+      setVolume(changed.x / 100)
+      audioRef.current.volume = changed.x / 100
+    }
+  }
+
   return (
     <div className="flex flex-col items-center gap-10">
       <div className="flex flex-col w-80% gap-y-2">
         <div className="flex justify-between">
-          <span className="font-poppins text-sm text-gray1">2:14</span>
-          <span className="font-poppins text-sm text-gray1">-1:15</span>
+          <span className="font-poppins text-sm text-gray1">{timeLoaded}</span>
+          <span className="font-poppins text-sm text-gray1">-{timeLeft}</span>
         </div>
         <ReactSlider
           axis="x"
@@ -77,7 +124,7 @@ const AudioPlayer = () => {
               background: '#27AE60'
             }
           }}
-          onChange={onSliderChange}
+          onChange={onSongProgressChange}
         />
       </div>
       <div className="flex flex-col w-70% gap-10">
@@ -106,7 +153,10 @@ const AudioPlayer = () => {
               <BsFillSkipForwardFill fontSize={30} />
             </button>
             <button>
-              <FiRepeat fontSize={26} />
+              <FiRepeat
+                onClick={toggleLoopedStatus}
+                className={isLooped ? 'text-green2' : ''}
+                fontSize={26} />
             </button>
           </div>
         </div>
@@ -123,7 +173,7 @@ const AudioPlayer = () => {
           <ReactSlider
             axis="x"
             xmax={100}
-            x={0}
+            x={volume * 100}
             styles={{
               track: {
                 width: '100%',
@@ -138,14 +188,13 @@ const AudioPlayer = () => {
                 background: '#27AE60'
               }
             }}
-            onChange={onSliderChange}
+            onChange={onVolumeChange}
           />
-          {!isMuted && <IoVolumeMedium fontSize={25} />}
+          <IoVolumeMedium fontSize={25} />
         </div>
       </div>
       <audio
-        ref={audioRef} 
-        src={song}
+        ref={audioRef}
         onLoadedData={onLoadedData}
         onTimeUpdate={onTimeUpdate}
         onEnded={_ => setIsPlaying(false)} />
