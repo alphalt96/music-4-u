@@ -36,7 +36,8 @@ module.exports = {
         'sidebar': '#FAFAFA',
         'gray1': '#828282',
         'gray2': '#4F4F4F',
-        'gray3': '#333333'
+        'gray3': '#333333',
+        'gray4': '#BDBDBD'
       },
       fontFamily: {
         'poppins': ['Poppins']

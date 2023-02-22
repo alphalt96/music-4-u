@@ -5,7 +5,7 @@ import { SongItemPropType } from '../utils/types'
 
 const SongItem = ({ song }: SongItemPropType) => {
   return (
-    <div className="flex">
+    <div className="flex w-full">
       <Link to="/">
         <img
           className="w-42px h-42px bg-black rounded-lg"

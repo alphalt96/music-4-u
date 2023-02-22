@@ -15,7 +15,7 @@ const Sidebar = ({ user }: SidebarPropType) => {
   return (
     <div className="h-full relative flex flex-col shrink-0 w-16 bg-sidebar items-center">
       <div className="flex flex-col items-center border-b-2 py-6 gap-y-7">
-        <RiNeteaseCloudMusicLine fontSize={40} />
+        <RiNeteaseCloudMusicLine fontSize={40} className="text-green2" />
         <Link to={'/'}>
           <img className="w-10 h-10 rounded-full" src={photo} alt="user-photo" />
         </Link>
