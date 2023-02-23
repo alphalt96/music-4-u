@@ -7,8 +7,9 @@ import { IoVolumeLow, IoVolumeMedium, IoVolumeHigh, IoVolumeMute } from 'react-i
 
 import client from '../utils/client'
 import { convertSecondToMin, getTimeRange } from '../utils/timer'
+import { AudioPlayerPropsType } from '../utils/types'
 
-const AudioPlayer = () => {
+const AudioPlayer = ({ playingSong, onFinish }: AudioPlayerPropsType) => {
   const audioRef = useRef<HTMLAudioElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
@@ -20,26 +21,29 @@ const AudioPlayer = () => {
   const [currentTime, setCurrentTime] = useState(0)
 
   useEffect(() => {
-    client.getSongDownloadUrl('1')
-      .then(url => {
-        client.getSongMediaFile(url).then(async data => {
-          if (data && audioRef.current) {
-            const blobParts: BlobPart[] = []
-            let readableData = await data.read()
+    if (playingSong) {
+      client.getSongDownloadUrl(playingSong.id)
+        .then(url => {
+          client.getSongMediaFile(url).then(async data => {
+            if (data && audioRef.current) {
+              const blobParts: BlobPart[] = []
+              let readableData = await data.read()
 
-            // read until the last blob
-            while (!readableData.done) {
-              blobParts.push(readableData.value)
-              readableData = await data.read()
+              // read until the last blob
+              while (!readableData.done) {
+                blobParts.push(readableData.value)
+                readableData = await data.read()
+              }
+              // TODO: use dynamic media type
+              const blob = new Blob(blobParts, { type: 'audio/mp3' })
+              const blobUrl = URL.createObjectURL(blob)
+              audioRef.current.src = blobUrl
             }
-            // TODO: use dynamic media type
-            const blob = new Blob(blobParts, { type: 'audio/mp3' })
-            const blobUrl = URL.createObjectURL(blob)
-            audioRef.current.src = blobUrl
-          }
+          })
         })
-      })
-  }, [])
+    }
+    setIsPlaying(false)
+  }, [playingSong])
 
 
   const onSongProgressChange = (changed: { x: number }) => {
@@ -91,6 +95,11 @@ const AudioPlayer = () => {
         audioRef.current.muted = true
       }
     }
+  }
+
+  const onSongFinish = () => {
+    setIsPlaying(false)
+    onFinish()
   }
 
   const onVolumeChange = (changed: { x: number }) => {
@@ -198,7 +207,7 @@ const AudioPlayer = () => {
         ref={audioRef}
         onLoadedData={onLoadedData}
         onTimeUpdate={onTimeUpdate}
-        onEnded={_ => setIsPlaying(false)} />
+        onEnded={onSongFinish} />
     </div>
   )
 }

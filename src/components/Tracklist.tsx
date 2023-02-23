@@ -1,28 +1,14 @@
-import React, { useRef, useState } from 'react'
+import React, { Dispatch, SetStateAction, useRef, useState } from 'react'
 import { FaRandom } from 'react-icons/fa'
 import { FiRepeat } from 'react-icons/fi'
 import { RxDragHandleHorizontal } from 'react-icons/rx'
 
-import { Song } from '../utils/types'
+import { Song, TracklistPropsType } from '../utils/types'
 import photo from '../assets/default.png'
 import SongItem from './SongItem'
 
-const Tracklist = () => {
-  const trackItemRef = useRef(null)
-
-  const data: Song[] = []
-  for (let i = 0; i < 20; i++) {
-    data.push({
-      id: i + 1,
-      title: `Song ${i + 1}`,
-      artist: 'nobody 1',
-      releasedDate: new Date(),
-      img: photo,
-      duration: 280
-    })
-  }
-
-  const [songList, setSongList] = useState(data)
+const Tracklist = ({ playingSong, setPlayingSong, trackList, setTrackList }: TracklistPropsType) => {
+  const [isLooped, setIsLooped] = useState(false)
   const [selectItemIdx, setSelectItemIdx] = useState<number | null>(null)
   const [dragOverItemIdx, setDragOverItemIdx] = useState<number | null>(null)
 
@@ -33,18 +19,18 @@ const Tracklist = () => {
     e.dataTransfer.setDragImage(e.target.parentNode, 10, 20)
   }
 
-  const onDragOver = (idx: number) => {
-    setDragOverItemIdx(idx)
-  }
-
   const onDragEnd = () => {
     if (dragOverItemIdx === selectItemIdx) return
 
-    const newSongList = songList.filter((_, i) => i !== selectItemIdx)
-    newSongList.splice(dragOverItemIdx!, 0, songList[selectItemIdx!])
-    setSongList(newSongList)
+    const newSongList = trackList.filter((_, i) => i !== selectItemIdx)
+    newSongList.splice(dragOverItemIdx!, 0, trackList[selectItemIdx!])
+    setTrackList(newSongList)
     setSelectItemIdx(null)
     setDragOverItemIdx(null)
+  }
+
+  const onDragEnter = (idx: number) => {
+    setDragOverItemIdx(idx)
   }
 
   return (
@@ -57,24 +43,24 @@ const Tracklist = () => {
               fontSize={20}
               className="text-gray4" />
           </button>
-          <button>
+          <button onClick={_ => setIsLooped(!isLooped)}>
             <FiRepeat
               fontSize={20}
-              className="text-gray4" />
+              className={isLooped ? 'text-green2' : 'text-gray4'} />
           </button>
         </div>
         <span className="font-poppins text-gray1 text-sm">Playing next</span>
       </div>
       <div className="flex flex-col gap-y-9px mt-3 overflow-scroll hide-scrollbar">
-        {songList.map((song, idx) => (
-          <div key={idx} onDragOver={_ => onDragOver(idx)} ref={trackItemRef} className="flex items-center gap-x-2">
+        {trackList.map((song, idx) => (
+          <div key={idx} onDragEnter={_ => onDragEnter(idx)} className="flex items-center gap-x-2">
             <button 
               draggable 
               onDragStart={e => onDragStart(e, idx)}
               onDragEnd={onDragEnd}>
               <RxDragHandleHorizontal className="text-gray1" />
             </button>
-            <SongItem song={song} />
+            <SongItem isActive={song.id === playingSong?.id} song={song} setPlayingSong={setPlayingSong} />
           </div>
         ))}
       </div>

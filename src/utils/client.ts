@@ -1,11 +1,12 @@
 import Envs from './env'
+import { Song } from './types';
 
 class Client {
   constructor(
     private readonly API_ENDPOINT = Envs.API_ENDPOINT || ''
   ) { }
 
-  async getSongDownloadUrl(id: string): Promise<string> {
+  async getSongDownloadUrl(id: number): Promise<string> {
     const response = await fetch(
       `${this.API_ENDPOINT}/getSongMediaFile/${id}`,
       {
@@ -28,6 +29,45 @@ class Client {
     const data = await response.body?.getReader()
     
     return data
+  }
+
+  async getRecommendedSongs(): Promise<Song[]> {
+    const response = await fetch(
+      `${this.API_ENDPOINT}/getRecommendedSongs`,
+      {
+        method: 'GET'
+      }
+    )
+
+    const responseBody = await response.json()
+
+    return responseBody.data
+  }
+
+  async getTopChartSongs(): Promise<Song[]> {
+    const response = await fetch(
+      `${this.API_ENDPOINT}/getTopChartSongs`,
+      {
+        method: 'GET'
+      }
+    )
+
+    const responseBody = await response.json()
+
+    return responseBody.data
+  }
+
+  async getSongImageUrl(id: number): Promise<string> {
+    const response = await fetch(
+      `${this.API_ENDPOINT}/getSongImage/${id}`,
+      {
+        method: 'GET'
+      }
+    )
+
+    const responseBody = await response.json()
+
+    return responseBody.url
   }
 }
 

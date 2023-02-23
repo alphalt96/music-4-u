@@ -2,33 +2,9 @@ import React from 'react'
 import { RiArrowDownSLine } from 'react-icons/ri'
 import { Link } from 'react-router-dom'
 
-import photo from '../assets/default.png'
+import { TopChartPropsType } from '../utils/types'
 
-const Topchart = () => {
-  const data = [
-    {
-      id: 1,
-      title: 'Song 1',
-      artist: 'nobody 1',
-      releasedDate: new Date(),
-      img: photo
-    },
-    {
-      id: 2,
-      title: 'Song 1',
-      artist: 'nobody 1',
-      releasedDate: new Date(),
-      img: photo
-    },
-    {
-      id: 3,
-      title: 'Song 1',
-      artist: 'nobody 1',
-      releasedDate: new Date(),
-      img: photo
-    }
-  ]
-
+const Topchart = ({ songs, setPlayingSong }: TopChartPropsType) => {
   return (
     <div className="flex flex-col gap-y-19px">
       <div className="flex relative items-center">
@@ -39,19 +15,21 @@ const Topchart = () => {
         </div>
       </div>
       <div className="grid grid-cols-2 justify-items-center gap-y-5">
-        {data.map(item => (
-          <div key={item.id}>
-            <Link to="/">
+        {songs.map(song => (
+          <div key={song.id}>
+            <button
+              onClick={_ => setPlayingSong(song)}>
               <img
-                src={item.img}
+                src={song.img}
                 className="w-120px h-120px rounded-lg bg-black"
                 alt="song-photo" />
-            </Link>
-            <div className="px-1 py-1.5">
-              <Link to="/">
-                <p className="font-medium text-gray3 text-sm font-poppins">{item.title}</p>
-              </Link>
-              <p className="font-light text-gray2 text-xs font-poppins">{item.artist}, {item.releasedDate.getFullYear()}</p>
+            </button>
+            <div className="px-1">
+              <button
+                onClick={_ => setPlayingSong(song)} >
+                <p className="font-medium text-gray3 text-sm font-poppins">{song.title}</p>
+              </button>
+              <p className="font-light text-gray2 text-xs font-poppins">{song.artist}, {song.releasedDate.getFullYear()}</p>
             </div>
           </div>
         ))}
