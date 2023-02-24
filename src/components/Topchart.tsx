@@ -1,10 +1,12 @@
-import React from 'react'
 import { RiArrowDownSLine } from 'react-icons/ri'
-import { Link } from 'react-router-dom'
 
+import { useAppDispatch } from '../shared/hooks'
+import { setPlayingSong } from '../shared/reducers/playerSlice'
 import { TopChartPropsType } from '../utils/types'
 
-const Topchart = ({ songs, setPlayingSong }: TopChartPropsType) => {
+const Topchart = ({ songs }: TopChartPropsType) => {
+  const dispatch = useAppDispatch()
+
   return (
     <div className="flex flex-col gap-y-19px">
       <div className="flex relative items-center">
@@ -18,7 +20,7 @@ const Topchart = ({ songs, setPlayingSong }: TopChartPropsType) => {
         {songs.map(song => (
           <div key={song.id}>
             <button
-              onClick={_ => setPlayingSong(song)}>
+              onClick={_ => dispatch(setPlayingSong(song))}>
               <img
                 src={song.img}
                 className="w-120px h-120px rounded-lg bg-black"
@@ -26,10 +28,10 @@ const Topchart = ({ songs, setPlayingSong }: TopChartPropsType) => {
             </button>
             <div className="px-1">
               <button
-                onClick={_ => setPlayingSong(song)} >
+                onClick={_ => dispatch(setPlayingSong(song))} >
                 <p className="font-medium text-gray3 text-sm font-poppins">{song.title}</p>
               </button>
-              <p className="font-light text-gray2 text-xs font-poppins">{song.artist}, {song.releasedDate.getFullYear()}</p>
+              <p className="font-light text-gray2 text-xs font-poppins">{song.artist}, {new Date(song.releasedDate).getFullYear()}</p>
             </div>
           </div>
         ))}
