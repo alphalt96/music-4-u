@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import ReactSlider from 'react-input-slider'
-import { FaRandom, FaPlay, FaPause } from 'react-icons/fa'
+import { FaPlay, FaPause } from 'react-icons/fa'
+import { BsShuffle } from 'react-icons/bs'
 import { FiRepeat } from 'react-icons/fi'
 import { BsFillSkipForwardFill, BsFillSkipBackwardFill } from 'react-icons/bs'
 import { IoVolumeLow, IoVolumeMedium, IoVolumeHigh, IoVolumeMute } from 'react-icons/io5'
@@ -13,6 +14,7 @@ const AudioPlayer = ({ playingSong, onFinish }: AudioPlayerPropsType) => {
   const audioRef = useRef<HTMLAudioElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
+  const [isAutoPlay, setIsAutoPlay] = useState(true)
   const [isLooped, setIsLooped] = useState(false)
   const [duration, setDuration] = useState(0)
   const [timeLoaded, setTimeLoaded] = useState('0:00')
@@ -41,8 +43,14 @@ const AudioPlayer = ({ playingSong, onFinish }: AudioPlayerPropsType) => {
             }
           })
         })
+      // set the value to true when autoPlay is activated
+      // set the value to false when autoPlay is disabled
+      if (isAutoPlay) {
+        setIsPlaying(true)
+      } else {
+        setIsPlaying(false)
+      }
     }
-    setIsPlaying(false)
   }, [playingSong])
 
 
@@ -141,7 +149,7 @@ const AudioPlayer = ({ playingSong, onFinish }: AudioPlayerPropsType) => {
         <div className="flex justify-between">
           <div className="flex gap-x-36px">
             <button>
-              <FaRandom fontSize={26} />
+              <BsShuffle fontSize={26} />
             </button>
             <button>
               <BsFillSkipBackwardFill fontSize={30} />
@@ -205,6 +213,7 @@ const AudioPlayer = ({ playingSong, onFinish }: AudioPlayerPropsType) => {
       </div>
       <audio
         ref={audioRef}
+        autoPlay={isAutoPlay}
         onLoadedData={onLoadedData}
         onTimeUpdate={onTimeUpdate}
         onEnded={onSongFinish} />

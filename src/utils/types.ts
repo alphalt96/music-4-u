@@ -24,6 +24,8 @@ export type DiscoverPropsType = {
   topCharts: Song[]
   recommendedSongs: Song[]
   setPlayingSong: Dispatch<SetStateAction<Song | null>>
+  trackList: Song[]
+  setTrackList: Dispatch<SetStateAction<Song[]>>
 }
 
 export type TracklistPropsType = {
@@ -31,16 +33,22 @@ export type TracklistPropsType = {
   setPlayingSong: Dispatch<SetStateAction<Song | null>>
   trackList: Song[]
   setTrackList: Dispatch<SetStateAction<Song[]>>
+  isTrackListLooped: boolean
+  setIsTrackListLooped: Dispatch<SetStateAction<boolean>>
 }
 
 export type TopChartPropsType = {
   songs: Song[]
+  trackList: Song[]
   setPlayingSong: Dispatch<SetStateAction<Song | null>>
+  setTrackList: Dispatch<SetStateAction<Song[]>>
 } 
 
 export type RecommnedSongPropsType = {
   songs: Song[]
+  trackList: Song[]
   setPlayingSong: Dispatch<SetStateAction<Song | null>>
+  setTrackList: Dispatch<SetStateAction<Song[]>>
 }
 
 export type AudioPlayerPropsType = {

@@ -1,14 +1,12 @@
 import React, { Dispatch, SetStateAction, useRef, useState } from 'react'
-import { FaRandom } from 'react-icons/fa'
 import { FiRepeat } from 'react-icons/fi'
+import { BsShuffle } from 'react-icons/bs'
 import { RxDragHandleHorizontal } from 'react-icons/rx'
 
-import { Song, TracklistPropsType } from '../utils/types'
-import photo from '../assets/default.png'
+import { TracklistPropsType } from '../utils/types'
 import SongItem from './SongItem'
 
-const Tracklist = ({ playingSong, setPlayingSong, trackList, setTrackList }: TracklistPropsType) => {
-  const [isLooped, setIsLooped] = useState(false)
+const Tracklist = ({ playingSong, setPlayingSong, trackList, setTrackList, isTrackListLooped, setIsTrackListLooped }: TracklistPropsType) => {
   const [selectItemIdx, setSelectItemIdx] = useState<number | null>(null)
   const [dragOverItemIdx, setDragOverItemIdx] = useState<number | null>(null)
 
@@ -39,14 +37,14 @@ const Tracklist = ({ playingSong, setPlayingSong, trackList, setTrackList }: Tra
         <span className="font-poppins text-gray3 text-xl font-bold">Track list</span>
         <div className="flex gap-x-4">
           <button>
-            <FaRandom
+            <BsShuffle
               fontSize={20}
               className="text-gray4" />
           </button>
-          <button onClick={_ => setIsLooped(!isLooped)}>
+          <button onClick={_ => setIsTrackListLooped(!isTrackListLooped)}>
             <FiRepeat
               fontSize={20}
-              className={isLooped ? 'text-green2' : 'text-gray4'} />
+              className={isTrackListLooped ? 'text-green2' : 'text-gray4'} />
           </button>
         </div>
         <span className="font-poppins text-gray1 text-sm">Playing next</span>
@@ -54,8 +52,8 @@ const Tracklist = ({ playingSong, setPlayingSong, trackList, setTrackList }: Tra
       <div className="flex flex-col gap-y-9px mt-3 overflow-scroll hide-scrollbar">
         {trackList.map((song, idx) => (
           <div key={idx} onDragEnter={_ => onDragEnter(idx)} className="flex items-center gap-x-2">
-            <button 
-              draggable 
+            <button
+              draggable={song.id !== playingSong?.id}
               onDragStart={e => onDragStart(e, idx)}
               onDragEnd={onDragEnd}>
               <RxDragHandleHorizontal className="text-gray1" />

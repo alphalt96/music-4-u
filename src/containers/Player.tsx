@@ -7,23 +7,11 @@ import photo from '../assets/default.png'
 import { Song } from '../utils/types'
 
 const Player = () => {
-  // data is temporary, should be replaced by using redux or indexeddb
-  const data: Song[] = []
-  for (let i = 0; i < 4; i++) {
-    data.push({
-      id: i + 1,
-      title: `Song ${i + 1}`,
-      artist: 'nobody 1',
-      releasedDate: new Date(),
-      img: photo,
-      duration: 280
-    })
-  }
-  
   const [recommendedSongs, setRecommendedSongs] = useState<Song[]>([])
   const [topChartSongs, setTopChartSongs] = useState<Song[]>([])
   const [playingSong, setPlayingSong] = useState<Song | null>(null)
-  const [trackList, setTrackList] = useState<Song[]>(data)
+  const [trackList, setTrackList] = useState<Song[]>([])
+  const [isTrackListLooped, setIsTrackListLooped] = useState(false)
 
   useEffect(() => {
     client.getRecommendedSongs().then(async songs => {
@@ -54,11 +42,13 @@ const Player = () => {
   }, [])
 
   const onSongFinished = () => {
+    if (trackList.length === 0) return
+
     const indexInTracks = trackList.findIndex(item => item.id === playingSong?.id)
     if (indexInTracks !== -1) {
       if (indexInTracks < trackList.length - 1) {
         setPlayingSong(trackList[indexInTracks + 1])
-      } else {
+      } else if (isTrackListLooped) {
         setPlayingSong(trackList[0])
       }
     } else {
@@ -68,7 +58,12 @@ const Player = () => {
 
   return (
     <div className="flex h-full">
-      <Discover topCharts={topChartSongs} recommendedSongs={recommendedSongs} setPlayingSong={setPlayingSong} />
+      <Discover 
+        topCharts={topChartSongs} 
+        recommendedSongs={recommendedSongs} 
+        setPlayingSong={setPlayingSong}
+        trackList={trackList}
+        setTrackList={setTrackList} />
       <div className="flex flex-col grow bg-sidebar">
         <div className="flex flex-col items-center pt-6">
           <span className="font-poppins font-semibold text-lg">Now playing {playingSong?.title}</span>
@@ -95,7 +90,9 @@ const Player = () => {
         playingSong={playingSong}
         setPlayingSong={setPlayingSong}
         trackList={trackList}
-        setTrackList={setTrackList} />
+        setTrackList={setTrackList} 
+        isTrackListLooped={isTrackListLooped}
+        setIsTrackListLooped={setIsTrackListLooped} />
     </div>
   )
 }
