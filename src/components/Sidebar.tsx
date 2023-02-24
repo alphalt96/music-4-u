@@ -9,13 +9,13 @@ import { SidebarPropType } from '../utils/types';
 import photo from '../assets/default.png'
 
 const inactivatedMenu = 'p-2.5 rounded-lg'
-const activatedMenu = 'bg-green-500 text-white p-2.5 rounded-2xl'
+const activatedMenu = 'bg-green2 text-white p-2.5 rounded-2xl'
 
 const Sidebar = ({ user }: SidebarPropType) => {
   return (
     <div className="h-full relative flex flex-col shrink-0 w-16 bg-sidebar items-center">
       <div className="flex flex-col items-center border-b-2 py-6 gap-y-7">
-        <RiNeteaseCloudMusicLine fontSize={40} />
+        <RiNeteaseCloudMusicLine fontSize={40} className="text-green2" />
         <Link to={'/'}>
           <img className="w-10 h-10 rounded-full" src={photo} alt="user-photo" />
         </Link>
