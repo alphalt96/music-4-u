@@ -1,7 +1,7 @@
 # Simple music web application `music-4-u`
 ## Features
 
-- Can listen the music but for now it's just only use fixed data from api
+- Can listen the music but for now it's just only use mock data from api
 - Can add the song from recommended list to track list
 - Repeat track list or repeat the song it self
 - Full control to the audio controller (except shuffling song button)
