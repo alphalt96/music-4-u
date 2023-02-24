@@ -1,10 +1,15 @@
+import { useDispatch } from 'react-redux'
+
+import { setPlayingSong as setPlayingSong2 } from '../shared/reducers/playerSlice'
 import { convertSecondToMin } from '../utils/timer'
 import { SongItemPropType } from '../utils/types'
 
-const SongItem = ({ song, setPlayingSong, isActive }: SongItemPropType) => {
+const SongItem = ({ song, isActive }: SongItemPropType) => {
+  const dispatch = useDispatch()
+
   return (
     <div className="flex w-full">
-      <button onClick={_ => setPlayingSong(song)}>
+      <button onClick={_ => dispatch(setPlayingSong2(song))}>
         <img
           className="w-42px h-42px bg-black rounded-lg"
           src={song.img}
@@ -17,7 +22,7 @@ const SongItem = ({ song, setPlayingSong, isActive }: SongItemPropType) => {
         </div>
         <div className="flex justify-between text-gray2 font-poppins text-xs">
           <span>{song.artist}</span>
-          <span>{song.releasedDate.getFullYear()}</span>
+          <span>{new Date(song.releasedDate).getFullYear()}</span>
         </div>
       </div>
     </div>

@@ -1,15 +1,12 @@
 import { MdOutlinePlaylistAdd } from 'react-icons/md'
 
+import { useAppDispatch } from '../shared/hooks'
+import { addToTrackList } from '../shared/reducers/playerSlice'
 import { RecommnedSongPropsType, Song } from '../utils/types'
 import SongItem from './SongItem'
 
-const RecommendedSong = ({ songs, setPlayingSong, trackList, setTrackList }: RecommnedSongPropsType) => {
-  const addToTrackList = (addSong: Song) => {
-    if (trackList.findIndex(trackItem => trackItem.id === addSong.id) !== -1)
-      return
-
-    setTrackList([...trackList, addSong])
-  }
+const RecommendedSong = ({ songs }: RecommnedSongPropsType) => {
+  const dispatch = useAppDispatch()
 
   return (
     <div>
@@ -19,9 +16,9 @@ const RecommendedSong = ({ songs, setPlayingSong, trackList, setTrackList }: Rec
       <div className="flex flex-col mt-5 gap-y-9px">
         {songs.map((song, idx) => (
           <div key={idx} className="flex">
-            <SongItem song={song} setPlayingSong={setPlayingSong} />
+            <SongItem song={song} />
             <button
-              onClick={_ => addToTrackList(song)} >
+              onClick={_ => dispatch(addToTrackList(song))} >
               <MdOutlinePlaylistAdd fontSize={22} className="text-gray1 hover:text-gray2" />
             </button>
           </div>

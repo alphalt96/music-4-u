@@ -9,8 +9,9 @@ import { IoVolumeLow, IoVolumeMedium, IoVolumeHigh, IoVolumeMute } from 'react-i
 import client from '../utils/client'
 import { convertSecondToMin, getTimeRange } from '../utils/timer'
 import { AudioPlayerPropsType } from '../utils/types'
+import { useAppSelector } from '../shared/hooks'
 
-const AudioPlayer = ({ playingSong, onFinish }: AudioPlayerPropsType) => {
+const AudioPlayer = ({ onFinish }: AudioPlayerPropsType) => {
   const audioRef = useRef<HTMLAudioElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
@@ -21,6 +22,8 @@ const AudioPlayer = ({ playingSong, onFinish }: AudioPlayerPropsType) => {
   const [timeLeft, setTimeLeft] = useState('0:00')
   const [volume, setVolume] = useState(1)
   const [currentTime, setCurrentTime] = useState(0)
+
+  const playingSong = useAppSelector(state => state.player.playingSong)
 
   useEffect(() => {
     if (playingSong) {
