@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, memo } from 'react'
 import ReactSlider from 'react-input-slider'
 import { FaPlay, FaPause } from 'react-icons/fa'
 import { BsShuffle } from 'react-icons/bs'
@@ -224,4 +224,4 @@ const AudioPlayer = ({ onFinish }: AudioPlayerPropsType) => {
   )
 }
 
-export default AudioPlayer
+export default memo(AudioPlayer)
