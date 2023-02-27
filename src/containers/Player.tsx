@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { AiOutlinePlus, AiOutlineHeart } from 'react-icons/ai'
 
 import { useAppDispatch, useAppSelector } from '../shared/hooks'
@@ -46,7 +46,7 @@ const Player = () => {
     })
   }, [])
 
-  const onSongFinished = () => {
+  const onSongFinished = useCallback(() => {
     if (trackList.length === 0) return
 
     const indexInTracks = trackList.findIndex(item => item.id === playingSong?.id)
@@ -62,7 +62,7 @@ const Player = () => {
     } else {
       dispatch(setPlayingSong(trackList[0]))
     }
-  }
+  }, [playingSong])
 
   return (
     <div className="flex h-full">
