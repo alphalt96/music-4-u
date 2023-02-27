@@ -39,9 +39,9 @@ const Tracklist = () => {
   }
 
   return (
-    <div className="flex flex-col w-80 px-4">
+    <div className="md:flex md:static md:h-full md:rounded-none md:bg-transparent h-4/5 bg-gray-800 rounded-md right-0 absolute flex-col w-80 px-4">
       <div className="flex flex-col gap-y-3 mt-6">
-        <span className="font-poppins text-gray3 text-xl font-bold">Track list</span>
+        <span className="font-poppins text-gray4 md:text-gray3 text-xl font-bold">Track list</span>
         <div className="flex gap-x-4">
           <button>
             <BsShuffle
