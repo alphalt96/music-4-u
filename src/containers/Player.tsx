@@ -65,6 +65,7 @@ const Player = () => {
     } else {
       dispatch(setPlayingSong(trackList[0]))
     }
+    // eslint-disable-next-line
   }, [playingSong])
 
   return (
@@ -78,9 +79,9 @@ const Player = () => {
         <div className="flex flex-col items-center pt-6">
           <span className="font-poppins font-semibold text-lg">Now playing {playingSong?.title}</span>
           <img
-            className="w-300px h-300px mt-14 bg-black rounded-md shadow-lg"
+            className="w-300px h-300px mt-14 rounded-md shadow-lg object-contain"
             src={playingSong ? playingSong.img : photo}
-            alt="song-photo" />
+            alt="song-cover" />
           <div className="flex w-300px h-45px justify-between mt-5">
             <button>
               <AiOutlinePlus fontSize={20} />

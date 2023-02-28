@@ -42,7 +42,7 @@ const Sidebar = ({ user }: SidebarPropType) => {
             <CiLogout fontSize={25} />
           </Link>
         ) : (
-          <Link to={'/'}>
+          <Link to={'/login'}>
             <CiLogin fontSize={25} />
           </Link>
         )}

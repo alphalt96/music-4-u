@@ -23,8 +23,8 @@ const Topchart = ({ songs }: TopChartPropsType) => {
               onClick={_ => dispatch(setPlayingSong(song))}>
               <img
                 src={song.img}
-                className="w-120px h-120px rounded-lg bg-black"
-                alt="song-photo" />
+                className="w-120px h-120px rounded-lg shadow-lg object-contain"
+                alt="song-cover" />
             </button>
             <div className="px-1">
               <button

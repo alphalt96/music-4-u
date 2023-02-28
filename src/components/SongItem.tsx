@@ -11,9 +11,9 @@ const SongItem = ({ song, isActive }: SongItemPropType) => {
     <div className="flex w-full">
       <button onClick={_ => dispatch(setPlayingSong2(song))}>
         <img
-          className="w-42px h-42px bg-black rounded-lg"
+          className="w-42px h-42px bg-black object-contain rounded-lg"
           src={song.img}
-          alt="song-photo" />
+          alt="song-cover" />
       </button>
       <div className="flex flex-col px-2 grow justify-center text-gray3 font-poppins text-sm">
         <div className="flex justify-between">
