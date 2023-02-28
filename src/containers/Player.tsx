@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { AiOutlinePlus, AiOutlineHeart } from 'react-icons/ai'
+import { MdPlaylistPlay, MdOutlineFeaturedPlayList } from 'react-icons/md'
+import { RxCross1 } from 'react-icons/rx'
 
 import { useAppDispatch, useAppSelector } from '../shared/hooks'
 import { setPlayingSong, unsetPlayingSong } from '../shared/reducers/playerSlice'
@@ -14,6 +16,7 @@ const Player = () => {
   const playingSong = useAppSelector(state => state.player.playingSong)
   const trackList = useAppSelector(state => state.player.trackList.data)
   const isTrackListLooped = useAppSelector(state => state.player.trackList.isTrackListLooped)
+  const [toggleTrackList, setToggleTrackList] = useState(false)
 
   const [recommendedSongs, setRecommendedSongs] = useState<Song[]>([])
   const [topChartSongs, setTopChartSongs] = useState<Song[]>([])
@@ -66,9 +69,11 @@ const Player = () => {
 
   return (
     <div className="flex h-full">
-      <Discover 
-        topCharts={topChartSongs} 
-        recommendedSongs={recommendedSongs} />
+      <div className="hidden md:block">
+        <Discover
+          topCharts={topChartSongs}
+          recommendedSongs={recommendedSongs} />
+      </div>
       <div className="flex flex-col grow bg-sidebar">
         <div className="flex flex-col items-center pt-6">
           <span className="font-poppins font-semibold text-lg">Now playing {playingSong?.title}</span>
@@ -90,8 +95,37 @@ const Player = () => {
           </div>
         </div>
         <AudioPlayer onFinish={onSongFinished} />
+        <div className="flex md:hidden justify-center mt-10">
+          <div className="flex w-300px justify-between">
+            <button>
+              <MdOutlineFeaturedPlayList fontSize={25} />
+            </button>
+            <button
+              onClick={_ => setToggleTrackList(!toggleTrackList)} >
+              <MdPlaylistPlay 
+                fontSize={25}
+                className={toggleTrackList ? 'text-green2': ''} />
+            </button>
+          </div>
+        </div>
       </div>
-      <Tracklist />
+
+      {/* For desktop devices */}
+      <div className="hidden md:block">
+        <Tracklist />
+      </div>
+
+      {/* For mobile devices */}
+      {toggleTrackList && (
+        <div className="flex md:hidden relative">
+          <Tracklist />
+          <button 
+            className="absolute right-5 top-3"
+            onClick={_ => setToggleTrackList(false)} >
+            <RxCross1 className="text-gray4" fontSize={25} />
+          </button>
+        </div>
+      )}
     </div>
   )
 }
