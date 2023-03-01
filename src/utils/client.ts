@@ -1,5 +1,14 @@
 import Envs from './env'
+import { User } from './models/user';
 import { Song } from './types';
+
+export type GetAccessTokenResponse = {
+  access_token: string,
+  user: {
+    id: string,
+    username: string
+  }
+}
 
 class Client {
   constructor(
@@ -10,7 +19,23 @@ class Client {
     return fetch(
       `${this.API_ENDPOINT}${path}`,
       {
-        method: 'GET'
+        method: 'GET',
+        credentials: 'include'
+      }
+    )
+  }
+
+  private post(path: string, body: any) {
+    return fetch(
+      `${this.API_ENDPOINT}${path}`,
+      {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify(body)
       }
     )
   }
@@ -52,6 +77,25 @@ class Client {
     const responseBody = await response.json()
 
     return responseBody.url
+  }
+
+  async getAccessToken(email: string, password: string): Promise<GetAccessTokenResponse> {
+    const response = await this.post('/getAccessToken', {
+      username: email,
+      password
+    })
+
+    const bodyData = await response.json()
+
+    return bodyData
+  }
+
+  async getUser(id: number): Promise<User> {
+    const response = await this.get(`/getUser/${id}`)
+
+    const responseBody = await response.json()
+
+    return responseBody.data
   }
 }
 

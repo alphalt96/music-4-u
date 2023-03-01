@@ -2,7 +2,11 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { IoMdArrowBack } from 'react-icons/io'
 
+import { useAppDispatch } from '../shared/hooks'
+import client from '../utils/client'
+import { setCurrentUser } from '../shared/reducers/authSlice'
 import backgroundVideo from '../assets/background.mp4'
+import { User } from '../utils/models/user';
 
 type FormErrors = {
   emailError: string | null;
@@ -13,6 +17,7 @@ const inputStyleNormal = 'font-poppins text-white outline-none font-bold font-se
 const inputStyleError = 'font-poppins text-white outline-none font-bold font-semibold py-1 px-2 my-3 rounded-sm bg-zinc-800 border-red-500 border-2'
 
 const Login = () => {
+  const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
   const [email, setEmail] = useState('');
@@ -44,17 +49,10 @@ const Login = () => {
   }
 
   const handleLoginSubmit = (e: any) => {
-    const existingUser = localStorage.getItem('user');
-
-    if (existingUser) localStorage.removeItem('user');
-
-    const isValid = false;
-
-    localStorage.setItem('user', JSON.stringify({
-      email
-    }));
-
-    navigate('/')
+    client.getAccessToken(email, password).then((data) => {
+      dispatch(setCurrentUser(data.user))
+      navigate('/')
+    })
 
     e.preventDefault();
   }

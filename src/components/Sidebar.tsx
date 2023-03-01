@@ -3,14 +3,26 @@ import { AiOutlineSetting, AiOutlineDashboard } from 'react-icons/ai'
 import { CiLogout, CiLogin } from 'react-icons/ci'
 import { FiHeadphones, FiHeart, FiBookmark } from 'react-icons/fi'
 import { Link, NavLink } from 'react-router-dom'
+import jsCookie from 'js-cookie'
 
-import { SidebarPropType } from '../utils/types';
+import { useAppSelector, useAppDispatch } from '../shared/hooks'
+import { unsetCurrentUser } from '../shared/reducers/authSlice'
 import photo from '../assets/default.png'
 
 const inactivatedMenu = 'p-2.5 rounded-lg'
 const activatedMenu = 'bg-green2 text-white p-2.5 rounded-2xl'
 
-const Sidebar = ({ user }: SidebarPropType) => {
+const Sidebar = () => {
+  const dispatch = useAppDispatch()
+  const currentUser = useAppSelector(state => state.auth.user)
+
+  const logout = () => {
+    jsCookie.remove('logged_in')
+    jsCookie.remove('current_user_id')
+    dispatch(unsetCurrentUser())
+    window.location.reload()
+  }
+
   return (
     <div className="md:h-full relative flex md:flex-col md:order-first md:py-0 py-2.5 shrink-0 md:w-16 bg-sidebar items-center">
       <div className="hidden md:flex flex-col items-center border-b-2 py-6 gap-y-7">
@@ -37,10 +49,11 @@ const Sidebar = ({ user }: SidebarPropType) => {
         <Link to={'/'}>
           <AiOutlineSetting fontSize={25} />
         </Link>
-        {user ? (
-          <Link to={'/'}>
+        {currentUser ? (
+          <button
+            onClick={logout} >
             <CiLogout fontSize={25} />
-          </Link>
+          </button>
         ) : (
           <Link to={'/login'}>
             <CiLogin fontSize={25} />

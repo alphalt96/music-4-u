@@ -1,10 +1,6 @@
 import { Dispatch, SetStateAction } from 'react'
 import { User } from './models/user'
 
-export type SidebarPropType = {
-  user?: User | null
-}
-
 export type Song = {
   id: number
   title: string
